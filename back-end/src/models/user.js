@@ -83,7 +83,7 @@ userSchema.statics.authenticateExternalUser = async function authenticate(login,
     };
 };
 
-userSchema.statics.isSuperAdmin = async function isSuperAdmin(login) {
+userSchema.statics.isSuperAdmin = function isSuperAdmin(login) {
     return superAdmin && superAdmin.login === login;
 };
 
