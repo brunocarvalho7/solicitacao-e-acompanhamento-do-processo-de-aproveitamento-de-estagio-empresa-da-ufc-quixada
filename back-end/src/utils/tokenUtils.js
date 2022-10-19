@@ -5,11 +5,13 @@ function verify(token) {
     return jwt.verify(token, privateKey);
 }
 
-function generateAuthToken(userId, userName, userEmail) {
+function generateAuthToken(userId, userName, userEmail, userLogin, userCourse) {
     return jwt.sign({ 
         _id: userId, 
         name: userName, 
-        email: userEmail 
+        email: userEmail,
+        login: userLogin, 
+        course: userCourse
     }, privateKey);
 }
 

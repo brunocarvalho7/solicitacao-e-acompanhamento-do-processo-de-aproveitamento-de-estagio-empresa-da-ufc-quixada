@@ -27,33 +27,40 @@ exports.registerNewUser = async function (req, res) {
     }
 }
 
-exports.loginUser = async function (req, res) {
-    try{
-        const { email, password } = req.body;
+exports.loginUser = async (req, res) => {
+    try {
+        const { login, password } = req.body;
 
-        const user = await User.findByCredentials(email, password);
+        const authenticationResult = await User.authenticateUser(login, password);
 
-        if (!user) {
-            return res.status(401).json({
-                message: 'Erro ao Logar! Verifique as suas credenciais de autenticação'
+        if (!authenticationResult.success) {
+            if (authenticationResult.isAccessDenied) {
+                return res.status(401).json({
+                    message: 'Erro ao Logar! Verifique as suas credenciais de autenticação.',
+                });
+            }
+
+            return res.status(500).json({
+                message: `Erro interno no servidor. Tente novamente mais tarde. Detalhes: ${authenticationResult.message}`,
             });
         }
+
+        const { user } = authenticationResult;
 
         const token = await user.generateAuthToken();
 
         return res.status(200).json({
-            message: "Usuário logado com sucesso!",
             user,
-            token
+            token,
         });
     } catch (error) {
         console.error(error);
-        res.status(400).json({
-            message: error.message
-        })
+        return res.status(400).json({
+            message: error.message,
+        });
     }
-}
+};
 
 exports.returnUserProfile = function (req, res) {
     res.json(req.userData);
-}
+};
