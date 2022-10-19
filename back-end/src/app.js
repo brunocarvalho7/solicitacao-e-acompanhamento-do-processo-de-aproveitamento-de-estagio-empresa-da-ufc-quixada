@@ -1,8 +1,8 @@
 const express = require('express');
 const cors = require('cors');
-const mongoose = require('mongoose');
 const morgan = require('morgan');
 const mongooseConnection = require("./config/mongooseConnection");
+const bootstrapSuperAdminUser = require('./config/bootstrapSuperAdminUser');
 
 const app = express();
 
@@ -16,6 +16,7 @@ app.use(morgan("dev"));
 app.use(cors());
 
 app.set('mongoose connection', mongooseConnection);
+app.set('set up super admin', bootstrapSuperAdminUser());
 
 app.use(index);
 app.use("/api/v1/", userRoutes);
