@@ -9,15 +9,21 @@ Trabalho de Conclusão de Curso
 - **[MongoDB](https://www.mongodb.com/try/download/community)**
 - **[MongoDB Compass](https://www.mongodb.com/products/compass)**
 - **Bibliotecas utilizadas**:
+  - **[axios](https://www.npmjs.com/package/axios)**
   - **[bcryptjs](https://www.npmjs.com/package/bcryptjs)**
   - **[bcrypt](https://www.npmjs.com/package/bcrypt)**
+  - **[cheerio](https://www.npmjs.com/package/cheerio)**
+  - **[cors](https://www.npmjs.com/package/cors)**
+  - **[cross-env](https://www.npmjs.com/package/cross-env)**
   - **[dotenv](https://www.npmjs.com/package/dotenv)**
   - **[jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)**
   - **[mongoose](https://www.npmjs.com/package/mongoose)**
+  - **[ssl-root-cas](https://www.npmjs.com/package/ssl-root-cas)**
 
 ### Front-end
 - **[Vue.js](https://vuejs.org/)**
 - **[Vuetify](https://vuejs.org/)**
+- **[Vue Router](https://v3.router.vuejs.org/)**
 - **Bibliotecas utilizadas:**
   - **[axios](https://www.npmjs.com/package/axios)**
   - **[vue-jwt-decode](https://www.npmjs.com/package/vue-jwt-decode)**
