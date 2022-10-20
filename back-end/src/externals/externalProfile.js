@@ -3,6 +3,7 @@ const path = require('path');
 const https = require('https');
 const cheerio = require('cheerio');
 const sslRootCas = require('ssl-root-cas');
+const Roles = require('../utils/roles.json');
 
 function createAxiosInstance() {
     const rootCas = sslRootCas.create();
@@ -96,7 +97,8 @@ async function getExternalProfileData(login, password) {
 
         const name = $('.glyphicon-user').parent('p').text().trim();
         const email = $('.fa-envelope').parent('p').text().trim();
-        const course = $('.fa-sitemap').parent('p').text().trim();
+        const course = [$('.fa-sitemap').parent('p').text().trim()];
+        const roles = [Roles.STUDENT];
 
         return {
             success: true,
@@ -104,6 +106,7 @@ async function getExternalProfileData(login, password) {
             name,
             email,
             course,
+            roles,
         };
     } catch (error) {
         return {

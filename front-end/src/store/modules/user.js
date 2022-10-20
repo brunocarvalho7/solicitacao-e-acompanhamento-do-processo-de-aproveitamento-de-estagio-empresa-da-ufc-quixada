@@ -1,6 +1,7 @@
 // Utilities
 import { make } from 'vuex-pathify'
 import axios from 'axios';
+import store from '@/store';
 
 // Globals
 // import { IN_BROWSER } from '@/util/globals'
@@ -10,6 +11,7 @@ const state = {
     login: '',
     course: '',
     email: '',
+    id: '',
   dark: false,
   drawer: {
     image: 0,
@@ -21,27 +23,68 @@ const state = {
     'rgba(228, 226, 226, 1), rgba(255, 255, 255, 0.7)',
     'rgba(244, 67, 54, .8), rgba(244, 67, 54, .8)',
   ],
-  images: [
-    'https://demos.creative-tim.com/material-dashboard-pro/assets/img/sidebar-1.jpg',
-    'https://demos.creative-tim.com/material-dashboard-pro/assets/img/sidebar-2.jpg',
-    'https://demos.creative-tim.com/material-dashboard-pro/assets/img/sidebar-3.jpg',
-    'https://demos.creative-tim.com/material-dashboard-pro/assets/img/sidebar-4.jpg',
-  ],
+  images: [],
   notifications: [],
   rtl: false,
 }
 
-const mutations = make.mutations(state)
+const mutations = {
+    ...make.mutations(state),
+    setProfileData: (state, profileData) => {
+        ['id', 'name', 'login', 'course', 'email'].forEach(function (attribute) {
+            const value = profileData[attribute];
+
+            if (value) {
+                state[attribute] = profileData[attribute];
+            }
+        });
+
+        if (profileData.roles) {
+            store.commit('authentication/roles', profileData.roles);
+        }
+    }
+}
 
 const actions = {
     getUserProfile: ({ commit }) => {
-        axios.get('/profile')
-        .then(res => {
-            ['name', 'login', 'course', 'email'].forEach(function (attribute) {
-                commit(attribute, res.data[attribute]);
+        return new Promise((resolve, reject) => {
+            axios.get('/profile')
+            .then(res => {
+                commit('setProfileData', res.data);
+                resolve(res.data);
+            })
+            .catch(error => {
+                const errorMessage = error && error.response && error.response.data && error.response.data.message;
+
+                reject(new Error(errorMessage));
             });
-        })
-        .catch(error => console.log(error));
+        });
+    },
+    updateProfile: ({ commit, state }, coordinator) => {
+        return new Promise((resolve, reject) => {
+            const endpoint = `/coordinators/${state.id}`;
+
+            axios.patch(endpoint, coordinator)
+            .then(res => {
+                if (res.data.success) {
+                    const token = res.data.token;
+    
+                    commit('setProfileData', coordinator);
+
+                    if (token) {
+                        store.commit('authentication/token', token);
+                    }
+                } else {
+                    reject(new Error(res.data.message));
+                }
+            })
+            .catch(error => {
+                const errorMessage = error && error.response && error.response.data && error.response.data.message;
+
+                reject(new Error(errorMessage));
+            })
+            .finally(() => resolve())
+        });
     },
   fetch: ({ commit }) => {
     const local = localStorage.getItem('vuetify@user') || '{}'

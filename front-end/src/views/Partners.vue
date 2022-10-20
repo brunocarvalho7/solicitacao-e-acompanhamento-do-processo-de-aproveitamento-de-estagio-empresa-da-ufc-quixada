@@ -16,6 +16,8 @@
         <iframe src="https://si3.ufc.br/sigaa/public/estagio/lista.jsf" :class="{'d-none': loading}"  @load="iframeLoaded" 
            title="Lista de Convenios de Estágio UFC" height="500px" width="100%"> 
         </iframe>
+
+        <a href="https://estagios.ufc.br/pt/convenios/" target="_blank" rel="noopener noreferrer">Veja mais informações sobre convênios para estágio</a>
     </v-container>
 </template>
 

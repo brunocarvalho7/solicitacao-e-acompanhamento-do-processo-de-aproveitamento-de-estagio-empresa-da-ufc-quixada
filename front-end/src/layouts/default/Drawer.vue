@@ -79,13 +79,13 @@
     },
 
     computed: {
+      items: get('app/allowedMenuItems'),
       ...get('user', [
         'dark',
         'gradient',
         'image',
       ]),
       ...get('app', [
-        'items',
         'version',
       ]),
       ...sync('app', [
