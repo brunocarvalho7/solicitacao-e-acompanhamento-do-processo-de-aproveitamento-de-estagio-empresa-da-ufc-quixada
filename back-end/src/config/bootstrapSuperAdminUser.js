@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const Roles = require('../utils/roles.json');
 const { superAdmin: { login, password } } = require('./config');
 
 module.exports = async () => {
@@ -14,7 +15,8 @@ module.exports = async () => {
             password,
             name: 'Super Admin',
             email: 'superAdmin@email.com',
-            course: 'Other',
+            course: ['Other'],
+            roles: [Roles.SUPER_ADMIN],
         });
 
         user = await newUser.save();

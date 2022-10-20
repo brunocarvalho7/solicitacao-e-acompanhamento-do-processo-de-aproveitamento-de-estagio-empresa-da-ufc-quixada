@@ -1,4 +1,6 @@
 import { make } from 'vuex-pathify';
+import { isAccessAuthorized } from '@/helpers/userHelpers';
+import Roles from '@/router/roles';
 
 const state = {
     drawer: null,
@@ -19,6 +21,12 @@ const state = {
             title: 'Convênios',
             icon: 'mdi-clipboard-outline',
             to: '/components/partners',
+        },
+        {
+            title: 'Coordenadores',
+            icon: 'mdi-account-group-outline',
+            to: '/components/coordinators',
+            roles: [Roles.SUPER_ADMIN]
         }
     ]
 }
@@ -35,6 +43,11 @@ const actions = {
 
 // no prefix, no case conversion. e.g: foo
 const getters = {
+    allowedMenuItems (state) {
+        return state.items.filter(function (itemMenu) {
+            return isAccessAuthorized(itemMenu.roles);
+        });
+    },
     ...make.getters(state)
 }
 

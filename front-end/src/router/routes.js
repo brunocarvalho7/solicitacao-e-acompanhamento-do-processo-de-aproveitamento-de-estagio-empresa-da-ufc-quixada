@@ -2,6 +2,7 @@ import HelloWorldPage from '@/components/HelloWorld';
 import LoginView from '@/views/Login';
 import UserProfileView from '@/views/UserProfile';
 import PartnersView from '@/views/Partners';
+import CoordinatorsView from '@/views/Coordinators';
 import NotFoundPage from '@/views/errors/NotFoundPage'
 import AccessDeniedPage from '@/views/errors/AccessDeniedPage'
 import ServerErrorPage from '@/views/errors/ServerErrorPage'
@@ -9,6 +10,8 @@ import ServerErrorPage from '@/views/errors/ServerErrorPage'
 import DefaultLayout from '@/layouts/default/Index';
 
 import { dispatch } from 'vuex-pathify';
+
+import Roles from './roles';
 
 export default [
     {
@@ -32,6 +35,16 @@ export default [
                 path: 'components/partners',
                 name: 'Convênios',
                 component: PartnersView
+            },
+            {
+                path: 'components/coordinators',
+                name: 'Cordenadores',
+                component: CoordinatorsView,
+                meta: {
+                    roles: [
+                        Roles.SUPER_ADMIN
+                    ]
+                }
             }
         ]
     },

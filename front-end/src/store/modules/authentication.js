@@ -1,14 +1,28 @@
 import axios from 'axios';
 import { make } from 'vuex-pathify';
 import router from '../../router'
+import store from '@/store';
+import Roles from '@/router/roles';
 
 const state = {
-    token: null
+    token: null,
+    roles: ['student']
 };
 
 // "set" prefix, constant case. e.g: SET_FOO
 const mutations = {
-    ...make.mutations(state)
+    ...make.mutations(state),
+    token: (state, token) => {
+        state.token = token;
+        localStorage.setItem('token', token);
+    
+        if (token) {
+            axios.defaults.headers.common['Authorization'] = token;
+        } else {
+            delete axios.defaults.headers.common['Authorization'];
+            localStorage.removeItem('token');
+        }
+    },
 }
 
 // "set" prefix, camel case. e.g: setFoo
@@ -21,10 +35,9 @@ const actions = {
             })
             .then(res => {
                 const { token } = res.data;
-                localStorage.setItem('token', token);
 
-                commit('token', { token: token });
-                axios.defaults.headers.common['Authorization'] = token;
+                commit('token', token);
+                store.commit('user/setProfileData', res.data.user);
             })
             .catch(error => {
                 const errorMessage = error && error.response && error.response.data && error.response.data.message;
@@ -37,8 +50,6 @@ const actions = {
 
     logout: ({commit}) => {
         commit('token', null);
-        localStorage.removeItem('token');
-        delete axios.defaults.headers.common['Authorization'];
         router.replace('/login');
     },
     ...make.actions(state)
@@ -47,8 +58,10 @@ const actions = {
 // no prefix, no case conversion. e.g: foo
 const getters = {
     isAuthenticated (state) {
-        console.log('state.token: ' + state.token);
         return state.token !== null
+    },
+    isEditProfileAllowed (state) {
+        return state.roles.includes(Roles.COORDINATOR);
     },
     ...make.getters(state)
 }

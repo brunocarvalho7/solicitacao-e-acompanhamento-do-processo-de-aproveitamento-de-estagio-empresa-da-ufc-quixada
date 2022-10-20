@@ -1,21 +1,22 @@
 const jwt = require('jsonwebtoken');
-const { privateKey } = require('./../config/config').token;
+const { privateKey } = require('../config/config').token;
 
 function verify(token) {
     return jwt.verify(token, privateKey);
 }
 
-function generateAuthToken(userId, userName, userEmail, userLogin, userCourse) {
-    return jwt.sign({ 
-        _id: userId, 
-        name: userName, 
+function generateAuthToken(userId, userName, userEmail, userLogin, userCourse, userRoles) {
+    return jwt.sign({
+        id: userId,
+        name: userName,
         email: userEmail,
-        login: userLogin, 
-        course: userCourse
+        login: userLogin,
+        course: userCourse,
+        roles: userRoles,
     }, privateKey);
 }
 
 module.exports = {
-    verify: verify,
-    generateAuthToken: generateAuthToken
+    verify,
+    generateAuthToken,
 };

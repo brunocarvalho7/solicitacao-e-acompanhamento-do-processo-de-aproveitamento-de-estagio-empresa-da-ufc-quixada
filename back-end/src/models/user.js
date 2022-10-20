@@ -1,15 +1,17 @@
 const bcrypt = require('bcryptjs');
-const tokenUtils = require('./../utils/tokenUtils');
-const externalProfileUtils = require('../externals/externalProfile');
+const { Schema, Types, model } = require('mongoose');
 const { superAdmin } = require('../config/config');
-const { Schema, model } = require('mongoose');
+const Roles = require('../utils/roles.json');
+const tokenUtils = require('../utils/tokenUtils');
+const externalProfileUtils = require('../externals/externalProfile');
 
 const userSchema = new Schema({
     name: { type: String, maxlength: 50, required: true },
     login: { type: String, maxlength: 50, required: true },
     email: { type: String, maxlength: 50, required: true },
     password: { type: String },
-    course: { type: String, maxlength: 50, required: true },
+    course: { type: [String], required: true },
+    roles: { type: [String], required: true },
 }, {
     timestamps: true,
 });
@@ -24,14 +26,33 @@ userSchema.pre('save', async function (next) {
     next();
 });
 
-userSchema.methods.generateAuthToken = async function generateAuthToken() {
+userSchema.methods.generateAuthToken = function generateAuthToken() {
     const user = this;
-    const { name, email, login, course } = user;
+
+    // eslint-disable-next-line object-curly-newline
+    const { name, email, login, course, roles } = user;
 
     // eslint-disable-next-line no-underscore-dangle
-    const token = tokenUtils.generateAuthToken(user._id, name, email, login, course);
+    const token = tokenUtils.generateAuthToken(user._id, name, email, login, course, roles);
 
     return token;
+};
+
+userSchema.methods.getPojoSchema = function getPojoSchema() {
+    const user = this.toObject();
+
+    // eslint-disable-next-line no-underscore-dangle
+    user.id = user._id;
+
+    ['password', 'createdAt', 'updatedAt', '__v', '_id'].forEach((attribute) => {
+        user[attribute] = undefined;
+    });
+
+    if (!user.roles.includes(Roles.COORDINATOR)) {
+        [user.course] = user.course;
+    }
+
+    return user;
 };
 
 userSchema.statics.findByCredentials = async function findByCredentials(login, password) {
@@ -48,10 +69,40 @@ userSchema.statics.findByCredentials = async function findByCredentials(login, p
     return null;
 };
 
-userSchema.statics.isEmailAlreadyInUse = async function (email) {
-    const user = await User.findOne({ email });
+userSchema.statics.findCoordinators = async function findCoordinators({ coordinatorId, login }) {
+    const match = {
+        $match: {
+            roles: Roles.COORDINATOR,
+            _id: Types.ObjectId(coordinatorId),
+            login,
+        },
+    };
 
-    console.log(user);
+    if (!coordinatorId) {
+        // eslint-disable-next-line no-underscore-dangle
+        delete match.$match._id;
+    }
+
+    if (!login) {
+        delete match.$match.login;
+    }
+
+    const coordinators = await this.aggregate([
+        match,
+        {
+            $replaceRoot: {
+                newRoot: {
+                    id: '$_id', name: '$name', login: '$login', email: '$email', course: '$course', roles: '$roles',
+                },
+            },
+        },
+    ]);
+
+    return coordinatorId || login ? coordinators[0] : coordinators;
+};
+
+userSchema.statics.isLoginAlreadyInUse = async function isLoginAlreadyInUse(login) {
+    const user = await this.findOne({ login });
 
     return !!user;
 };
@@ -66,12 +117,14 @@ userSchema.statics.authenticateExternalUser = async function authenticate(login,
     let user = await this.findOne({ login });
 
     if (!user) {
-        const { name, email, course } = externalProfileData;
+        // eslint-disable-next-line object-curly-newline
+        const { name, email, course, roles } = externalProfileData;
         const newUser = new this({
             name,
             login,
             email,
             course,
+            roles,
         });
 
         user = await newUser.save();
@@ -87,6 +140,10 @@ userSchema.statics.isSuperAdmin = function isSuperAdmin(login) {
     return superAdmin && superAdmin.login === login;
 };
 
+userSchema.statics.isCoordinator = async function isCoordinator(login) {
+    return !!await this.findCoordinators({ login });
+};
+
 userSchema.statics.authenticateSuperAdminUser = async function authenticate(login, password) {
     if (!this.isSuperAdmin(login)) {
         return {
@@ -95,6 +152,10 @@ userSchema.statics.authenticateSuperAdminUser = async function authenticate(logi
         };
     }
 
+    return this.authenticateInternalUser(login, password);
+};
+
+userSchema.statics.authenticateInternalUser = async function authenticate(login, password) {
     const user = await this.findByCredentials(login, password);
 
     if (!user) {
@@ -112,8 +173,13 @@ userSchema.statics.authenticateSuperAdminUser = async function authenticate(logi
 
 userSchema.statics.authenticateUser = async function authenticate(login, password) {
     if (this.isSuperAdmin(login)) {
-        const result = await this.authenticateSuperAdminUser(login, password);
-        return result;
+        return this.authenticateSuperAdminUser(login, password);
+    }
+
+    const isCoordinator = await this.isCoordinator(login);
+
+    if (isCoordinator) {
+        return this.authenticateInternalUser(login, password);
     }
 
     return this.authenticateExternalUser(login, password);

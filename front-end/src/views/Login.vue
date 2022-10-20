@@ -73,7 +73,7 @@
                 dispatch('authentication/login', { login: this.login, password: this.password })
                     .then(() => {
                         if (get('authentication/isAuthenticated')) {
-                            this.$router.push('/components/profile')
+                            this.$router.push('/')
                         }
                     }).catch((e) => {
                         this.error = e.message;
