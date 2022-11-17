@@ -1,0 +1,30 @@
+{
+    "SIGAA_REGISTRATION": {
+        "step": "sigaaRegistration",
+        "position": 1
+    },
+    "DOCUMENTATION": {
+        "step": "documentation",
+        "position": 2
+    },
+    "INTERNSHIP_PLAN": {
+        "step": "internshipPlan",
+        "position": 3
+    },
+    "PERFORMANCE_EVALUATION": {
+        "step": "performanceEvaluation",
+        "position": 4
+    },
+    "REPORT": {
+        "step": "report",
+        "position": 5
+    },
+    "WORKSHOP": {
+        "step": "workshop",
+        "position": 6
+    },
+    "COMPLETED": {
+        "step": "completed",
+        "position": 7
+    }
+}

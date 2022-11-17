@@ -27,7 +27,12 @@ const state = {
             icon: 'mdi-account-group-outline',
             to: '/components/coordinators',
             roles: [Roles.SUPER_ADMIN]
-        }
+        },
+        {
+            title: 'Processo',
+            icon: 'mdi-view-dashboard',
+            to: '/components/process',
+        },
     ]
 }
 
