@@ -2,6 +2,7 @@ import HelloWorldPage from '@/components/HelloWorld';
 import LoginView from '@/views/Login';
 import UserProfileView from '@/views/UserProfile';
 import PartnersView from '@/views/Partners';
+import ProcessView from '@/views/Process';
 import CoordinatorsView from '@/views/Coordinators';
 import NotFoundPage from '@/views/errors/NotFoundPage'
 import AccessDeniedPage from '@/views/errors/AccessDeniedPage'
@@ -35,6 +36,11 @@ export default [
                 path: 'components/partners',
                 name: 'Convênios',
                 component: PartnersView
+            },
+            {
+                path: 'components/process',
+                name: 'Processos',
+                component: ProcessView
             },
             {
                 path: 'components/coordinators',

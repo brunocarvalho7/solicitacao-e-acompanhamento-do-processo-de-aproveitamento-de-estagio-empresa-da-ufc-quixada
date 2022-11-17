@@ -69,12 +69,35 @@ userSchema.statics.findByCredentials = async function findByCredentials(login, p
     return null;
 };
 
-userSchema.statics.findCoordinators = async function findCoordinators({ coordinatorId, login }) {
+userSchema.statics.findCoordinatorByCourse = async function findCoordinatorByCourse({ course }) {
+    const match = {
+        $match: {
+            roles: Roles.COORDINATOR,
+            course,
+        },
+    };
+
+    const coordinators = await this.aggregate([
+        match,
+        {
+            $replaceRoot: {
+                newRoot: {
+                    id: '$_id', name: '$name', login: '$login', email: '$email', course: '$course', roles: '$roles',
+                },
+            },
+        },
+    ]);
+
+    return coordinators && coordinators.length ? coordinators[0] : null;
+};
+
+userSchema.statics.findCoordinators = async function find({ coordinatorId, login, course }) {
     const match = {
         $match: {
             roles: Roles.COORDINATOR,
             _id: Types.ObjectId(coordinatorId),
             login,
+            course,
         },
     };
 
@@ -85,6 +108,10 @@ userSchema.statics.findCoordinators = async function findCoordinators({ coordina
 
     if (!login) {
         delete match.$match.login;
+    }
+
+    if (!course) {
+        delete match.$match.course;
     }
 
     const coordinators = await this.aggregate([
@@ -98,7 +125,7 @@ userSchema.statics.findCoordinators = async function findCoordinators({ coordina
         },
     ]);
 
-    return coordinatorId || login ? coordinators[0] : coordinators;
+    return coordinatorId || login || course ? coordinators[0] : coordinators;
 };
 
 userSchema.statics.isLoginAlreadyInUse = async function isLoginAlreadyInUse(login) {

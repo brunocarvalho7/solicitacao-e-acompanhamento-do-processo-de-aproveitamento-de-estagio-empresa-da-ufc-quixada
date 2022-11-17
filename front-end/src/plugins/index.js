@@ -2,4 +2,5 @@
 
 import './app';
 import './vuelidate';
-
+import './vue-moment';
+import './vue-mask';
