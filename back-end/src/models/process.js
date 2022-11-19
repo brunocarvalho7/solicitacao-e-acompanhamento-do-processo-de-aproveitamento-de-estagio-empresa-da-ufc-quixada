@@ -17,7 +17,17 @@ const StepSchema = new Schema({
 const CurrentStepSchema = new Schema({
     step: { type: String, default: 'sigaaRegistration' },
     position: { type: Number, default: 1 },
+    description: { type: String, default: '' },
     _id: false,
+});
+
+CurrentStepSchema.pre('save', function (next) {
+    const currentStep = this;
+    const currentStepKey = Object.keys(Steps).find((step) => Steps[step].step === currentStep.step);
+
+    currentStep.description = currentStepKey ? Steps[currentStepKey].description : '';
+
+    next();
 });
 
 const StepsSchema = new Schema({
@@ -160,11 +170,11 @@ ProcessSchema.methods.approveDocumentation = async function approveDocumentation
 
     await this.save();
 
-    const pojoSchema = await this.getPojoSchema();
+    const process = await this.populate('student', 'name course');
 
     return {
         success: true,
-        process: pojoSchema,
+        process,
     };
 };
 

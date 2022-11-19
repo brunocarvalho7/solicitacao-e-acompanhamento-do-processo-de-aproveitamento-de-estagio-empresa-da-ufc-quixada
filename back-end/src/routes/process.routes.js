@@ -27,7 +27,8 @@ const upload = multer({
 });
 const router = express.Router();
 
-router.get('/', userLoggedIn.validateLoggedIn, processController.getProcess);
+router.get('/', userLoggedIn.validateLoggedIn, userLoggedIn.isStudent, processController.getProcess);
+router.get('/all', userLoggedIn.validateLoggedIn, userLoggedIn.isCoordinator, processController.getAllProcesses);
 router.post('/sigaaRegistration/confirm', userLoggedIn.validateLoggedIn, processController.confirmSigaaRegistration);
 router.post('/internshipType', userLoggedIn.validateLoggedIn, processController.setInternshipType);
 router.post('/documentation', userLoggedIn.validateLoggedIn, upload.single('documentFile'), processController.uploadDocumentation);

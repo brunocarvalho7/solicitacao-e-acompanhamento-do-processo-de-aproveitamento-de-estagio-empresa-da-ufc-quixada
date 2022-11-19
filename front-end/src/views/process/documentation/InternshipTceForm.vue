@@ -250,7 +250,8 @@
                             <v-textarea label="Atividades Previstas" v-model="tce.estagio.atividadesPrevistas" :error-messages="errors.estagio.atividadesPrevistas" @blur="$v.tce.estagio.atividadesPrevistas.$touch()" />
                         </v-col>
 
-                        <v-row class="mb-2">
+                        <!-- Botões -->
+                        <v-row class="mb-2" id="tce-actions">
                             <v-col cols="12" class="d-flex justify-center">
                                 <v-btn color="secondary" text class="mr-2" @click="goBack">
                                     Voltar
@@ -282,10 +283,7 @@
                             </v-col>
                         </v-row>
 
-                        <!-- Botões -->
-        <div class="d-flex justify-space-around mt-4" id="tce-actions">
-            
-        </div>
+                        
                     </v-row>
                 </v-container>
             </v-form>

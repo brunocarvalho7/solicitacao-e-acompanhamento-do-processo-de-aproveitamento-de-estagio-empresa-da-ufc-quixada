@@ -6,7 +6,7 @@ import Roles from '@/router/roles';
 
 const state = {
     token: null,
-    roles: ['student']
+    roles: ['coordinator']
 };
 
 // "set" prefix, constant case. e.g: SET_FOO
