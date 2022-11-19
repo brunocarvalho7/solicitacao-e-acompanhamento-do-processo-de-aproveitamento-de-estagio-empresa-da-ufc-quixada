@@ -44,6 +44,10 @@ exports.validateLoggedIn = function validate(req, res, next) {
     }
 };
 
+exports.isStudent = function validate(req, res, next) {
+    return isRoleAssignedToLoggedInUser([Roles.STUDENT], req, res, next);
+};
+
 exports.isSuperAdmin = function validate(req, res, next) {
     return isRoleAssignedToLoggedInUser([Roles.SUPER_ADMIN], req, res, next);
 };

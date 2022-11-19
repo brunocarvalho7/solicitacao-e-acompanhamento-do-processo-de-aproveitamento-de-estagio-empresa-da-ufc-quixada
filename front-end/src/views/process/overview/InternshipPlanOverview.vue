@@ -15,7 +15,7 @@
                 <v-divider />
                 
                 <v-stepper-step step="2" color="secondary" :complete="internshipPlan.isApproved">
-                    Aprovação do Coordenação
+                    Aprovação da Coordenação
                 </v-stepper-step>
             </v-stepper-header>
         </v-stepper>

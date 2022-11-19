@@ -3,6 +3,7 @@ import LoginView from '@/views/Login';
 import UserProfileView from '@/views/UserProfile';
 import PartnersView from '@/views/Partners';
 import ProcessView from '@/views/Process';
+import ProcessManagementView from '@/views/ProcessManagement';
 import CoordinatorsView from '@/views/Coordinators';
 import NotFoundPage from '@/views/errors/NotFoundPage'
 import AccessDeniedPage from '@/views/errors/AccessDeniedPage'
@@ -39,8 +40,23 @@ export default [
             },
             {
                 path: 'components/process',
+                name: 'Processo',
+                component: ProcessView,
+                meta: {
+                    roles: [
+                        Roles.STUDENT
+                    ]
+                }
+            },
+            {
+                path: 'components/processes',
                 name: 'Processos',
-                component: ProcessView
+                component: ProcessManagementView,
+                meta: {
+                    roles: [
+                        Roles.COORDINATOR
+                    ]
+                }
             },
             {
                 path: 'components/coordinators',

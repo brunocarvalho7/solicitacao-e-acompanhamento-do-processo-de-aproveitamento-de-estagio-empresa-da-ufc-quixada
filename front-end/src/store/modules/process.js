@@ -2,6 +2,39 @@ import axios from 'axios';
 import { make } from 'vuex-pathify';
 
 const state = {
+    all: [],
+    steps: [
+        {
+            "step": "sigaaRegistration",
+            "description": "Matriculado",
+            "hasDocumentation": false,
+        },
+        {
+            "step": "documentation",
+            "description": "Documentação (TCE / Contrato de Trabalho)",
+            "hasDocumentation": true,
+        },
+        {
+            "step": "internshipPlan",
+            "description": "Plano de Estágio",
+            "hasDocumentation": true,
+        },
+        {
+            "step": "performanceEvaluation",
+            "description": "Avaliação de Desempenho",
+            "hasDocumentation": true,
+        },
+        {
+            "step": "report",
+            "description": "Relatório Final",
+            "hasDocumentation": true,
+        },
+        {
+            "step": "workshop",
+            "description": "Seminário",
+            "hasDocumentation": false,
+        },        
+    ],
     tce: {
         unidadeConcedente: {
             razaoSocial: null,
@@ -133,7 +166,13 @@ const mutations = {
         state.steppers.showInternshipPlanUploader = !process.steps.internshipPlan.isSubmitted && process.steps.currentStep.step === 'internshipPlan';
         state.steppers.showPerformanceEvaluationUploader = !process.steps.performanceEvaluation.isSubmitted && process.steps.currentStep.step === 'performanceEvaluation';
         state.steppers.showFinalReportUploader = !process.steps.report.isSubmitted && process.steps.currentStep.step === 'report';
-    }
+    },
+
+    updateProcess: (state, process) => {
+        let index = state.all.findIndex(c => c._id === process._id);
+
+        Object.assign(state.all[index], process);
+    },
 };
 
 const actions = {
@@ -241,6 +280,55 @@ const actions = {
             .then(res => {
                 if (res.data.success) {
                     commit('process', res.data.process);
+                } else {
+                    reject(new Error(res.data.message));
+                }
+            })
+            .catch(error => {
+                const errorMessage = error && error.response && error.response.data && error.response.data.message;
+
+                reject(new Error(errorMessage));
+            })
+            .finally(() => resolve())
+        });
+    },
+    getAllProcesses: ({commit}) => {
+        return new Promise((resolve, reject) => {
+            axios.get('/process/all')
+            .then(res => {
+                if (res.data.success) {
+                    commit('all', res.data.processes);
+                } else {
+                    reject(new Error(res.data.message));
+                }
+            })
+            .catch(error => {
+                const errorMessage = error && error.response && error.response.data && error.response.data.message;
+
+                reject(new Error(errorMessage));
+            })
+            .finally(() => resolve())
+        });
+    },
+    downloadDocument: (context, documentPath) => {
+        return new Promise((resolve, reject) => {
+            axios.get(documentPath, { responseType: 'blob' })
+            .then((res) => {
+                resolve(res.data);
+            })
+            .catch(error => {
+                const errorMessage = error && error.response && error.response.data && error.response.data.message;
+
+                reject(new Error(errorMessage));
+            })
+        });
+    },
+    approveDocumentation: ({commit}, processId) => {
+        return new Promise((resolve, reject) => {
+            axios.post(`/process/${processId}/documentation/approve`)
+            .then(res => {
+                if (res.data.success) {
+                    commit('updateProcess', res.data.process);
                 } else {
                     reject(new Error(res.data.message));
                 }

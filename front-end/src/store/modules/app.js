@@ -32,6 +32,13 @@ const state = {
             title: 'Processo',
             icon: 'mdi-view-dashboard',
             to: '/components/process',
+            roles: [Roles.STUDENT]
+        },
+        {
+            title: 'Processos',
+            icon: 'mdi-view-dashboard',
+            to: '/components/processes',
+            roles: [Roles.COORDINATOR]
         },
     ]
 }

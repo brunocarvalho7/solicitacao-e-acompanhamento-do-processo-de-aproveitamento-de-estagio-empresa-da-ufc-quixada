@@ -124,6 +124,25 @@ exports.getProcess = async (req, res) => {
     }
 };
 
+exports.getAllProcesses = async (req, res) => {
+    try {
+        const { id } = req.userData;
+        const processes = await Process
+            .find({ coordinator: Types.ObjectId(id) })
+            .populate('student', 'name course');
+
+        res.json({
+            success: true,
+            processes,
+        });
+    } catch (e) {
+        res.status(400).json({
+            success: false,
+            message: e.message,
+        });
+    }
+};
+
 exports.confirmSigaaRegistration = async (req, res) => {
     try {
         const { id } = req.userData;
