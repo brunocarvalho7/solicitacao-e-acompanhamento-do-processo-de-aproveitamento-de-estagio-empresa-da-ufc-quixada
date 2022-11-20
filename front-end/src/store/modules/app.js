@@ -4,8 +4,6 @@ import Roles from '@/router/roles';
 
 const state = {
     drawer: null,
-    drawerImage: true,
-    version: "1.0.0",
     mini: false,
     items: [
         {

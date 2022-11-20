@@ -1,6 +1,5 @@
 <template>
-    <v-app-bar id="default-app-bar" class="v-bar--underline" color="transparent" height="70" 
-        :clipped-left="$vuetify.rtl" :clipped-right="!$vuetify.rtl" app absolute flat>
+    <v-app-bar id="default-app-bar" class="v-bar--underline" color="transparent" height="70" app absolute flat>
 
         <v-app-bar-nav-icon class="hidden-md-and-up" @click="drawer = !drawer" />
 
@@ -38,7 +37,6 @@
         computed: {
             ...sync('app', [
                 'drawer',
-                'mini',
             ]),
             name: get('route/name'),
             currentUserId: get('user/id'),
@@ -65,5 +63,5 @@
                 }
             });
         },
-  }
+    }
 </script>

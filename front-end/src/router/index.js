@@ -45,8 +45,14 @@ router.beforeResolve((to, from, next) => {
     next();
 });
 
-router.afterEach(() => {
+router.afterEach((to) => {
     NProgress.done();
+
+    Vue.nextTick(() => {
+        if (to.name) {
+            document.title = `${to.name} | Solicitação e Acompanhamento de processo de estágios`;
+        }
+    });
 });
 
 export default router;

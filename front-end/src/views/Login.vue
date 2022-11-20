@@ -10,10 +10,7 @@
                                     <h1 class="flex my-3 font-weight-bold">
                                         Solicitação e Acompanhamento do Processo de Aproveitamento de Estágio-Empresa
                                     </h1>
-                                    <h4 class="text-xs-justify font-weight-light">Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                                        Sed volutpat tristique euismod. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae;
-                                        Quisque nec lacinia felis, non gravida neque. Phasellus ut ipsum pellentesque, fringilla felis a, porta nisi. 
-                                        Fusce nisi mauris, feugiat nec volutpat vel, interdum non sapien. Quisque accumsan imperdiet tincidunt.
+                                    <h4 class="text-xs-justify font-weight-light">
                                     </h4>
                                 </v-card-text>
                             </v-flex>
@@ -33,6 +30,10 @@
                                         </div>
                                         <v-text-field append-icon="person" name="login" label="Login" type="text" v-model="login"></v-text-field>
                                         <v-text-field append-icon="lock" name="password" label="Senha" id="password" type="password" v-model="password"></v-text-field>
+                                        <p>
+                                            Utilize as mesmas credenciais cadastradas na <a href="https://identidadepessoa.quixada.ufc.br/" target="_blank">Base Centralizada.</a>
+                                        </p>
+
                                     </v-card-text>
                                     <div class="text-xs-center">
                                         <v-btn color="secondary" type="submit" :loading="loading" large>Entrar</v-btn>
