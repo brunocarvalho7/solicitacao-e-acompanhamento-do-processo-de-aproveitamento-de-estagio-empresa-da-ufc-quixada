@@ -59,7 +59,8 @@
                             </template>
 
                             <span>
-                                Aprovar Documentação
+                                Aprovar 
+                                {{ props.item.steps[props.item.steps.currentStep.step] && props.item.steps[props.item.steps.currentStep.step].documentPath ? 'Documentação' : '' }}
                             </span>
                         </v-tooltip>
                     </td>
@@ -165,14 +166,29 @@
         },
         computed: {
             processes: get('process/all'),
+            processGoAndOpen: get('process/processGoAndOpen'),
             selectedProcessCurrentStep() {
                 return this.process && this.process.steps && this.process.steps.currentStep.position - 1;
+            },
+        },
+        watch: {
+            processGoAndOpen(openProcessId) {
+                if (openProcessId) {
+                    const openProcessObj = this.processes.find((process) => process._id === openProcessId);
+                    localStorage.removeItem('openProcess');
+                    this.openProcess(openProcessObj)
+                }
             },
         },
         created () {
             dispatch('process/getAllProcesses')
                 .then(() => {
                     this.loading = false;
+
+                    if (this.processGoAndOpen) {
+                        const openProcessObj = this.processes.find((process) => process._id === this.processGoAndOpen);
+                        this.openProcess(openProcessObj)
+                    }
                 })
                 .catch(() => {
                     this.loading = false;
@@ -187,7 +203,8 @@
             close: function () {
                 this.dialog = false;
                 this.$nextTick(() => {
-                    this.process = Object.assign({});
+                    this.process = null;
+                    this.$store.set('process/processGoAndOpen', null);
                 });
             },
 
@@ -232,3 +249,12 @@
         },
     }
 </script>
+
+<style>
+@media only screen and (max-width: 959px) {
+  .v-stepper:not(.v-stepper--vertical) .v-stepper__label {
+    display: flex !important;
+    font-size: 14px !important;
+  }
+}
+</style>

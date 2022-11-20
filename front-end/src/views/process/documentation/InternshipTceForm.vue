@@ -289,7 +289,15 @@
             </v-form>
         </material-card>
 
-        
+        <v-snackbar v-model="isSnackbarVisible" multi-line>
+            {{ snackbarMessage }}
+
+            <template v-slot:action="{ attrs }">
+                <v-btn color="red" text v-bind="attrs" @click="isSnackbarVisible = false">
+                    Fechar
+                </v-btn>
+            </template>
+        </v-snackbar>
     </v-card>
     <v-container id="loader-tce-file-generating" style="height: 400px;" v-else>
         <v-row class="fill-height" align-content="center" justify="center">
@@ -331,6 +339,8 @@
             menuDataInicio: false,
             menuDataFim: false,
             isGeneratingTce: false,
+            isSnackbarVisible: false,
+            snackbarMessage: null,
             errors: {
                 unidadeConcedente: {
                     razaoSocial: null,
@@ -393,13 +403,7 @@
             }
         }),
         mounted() {
-            dispatch('process/getTce')
-                .then(function () {
-                    console.log('Loaded');
-                })
-                .catch(function (e) {
-                    console.err(e);
-                });
+            dispatch('process/getTce');
         },
         methods: {
             isNumber (evt) {
@@ -419,11 +423,13 @@
             },
             saveTce () {
                 dispatch('process/saveTce', this.tce)
-                    .then(function () {
-                        alert('Salvo')
+                    .then(() => {
+                        this.snackbarMessage = "TCE salvo com sucesso.";
+                        this.isSnackbarVisible = true;
                     })
-                    .catch(function () {
-
+                    .catch((e) => {
+                        this.snackbarMessage = e.message;
+                        this.isSnackbarVisible = true;
                     });
             },
             generateTce () {

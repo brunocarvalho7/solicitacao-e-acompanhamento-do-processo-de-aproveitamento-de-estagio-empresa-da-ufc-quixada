@@ -1,6 +1,8 @@
+/* eslint-disable max-len */
 /* eslint-disable no-underscore-dangle */
 const { Schema, Types, model } = require('mongoose');
 const User = require('./user');
+const Notification = require('./notification');
 const Steps = require('../utils/steps.json');
 
 const StepSchema = new Schema({
@@ -12,6 +14,30 @@ const StepSchema = new Schema({
     documentApprovedDate: { type: Date, default: null },
     documentPath: { type: String, default: null },
     _id: false,
+});
+
+StepSchema.pre('save', async function save(next) {
+    const self = this;
+    const steps = self.parent();
+    const process = steps.parent();
+    const attributesModified = {
+        isSubmitted: self.isModified('isSubmitted'),
+        isApproved: self.isModified('isApproved'),
+        isFinished: self.isModified('isFinished'),
+        documentPath: self.isModified('documentPath'),
+    };
+
+    const hasSomeNotificableAttributeModified = Object.keys(attributesModified).some((key) => attributesModified[key]);
+
+    if (process.$isNew || !hasSomeNotificableAttributeModified) {
+        return next();
+    }
+
+    const stepPosition = self.isModified('isFinished') ? steps.currentStep.position - 1 : steps.currentStep.position;
+
+    await Notification.createNotifications(process, stepPosition, attributesModified);
+
+    return next();
 });
 
 const CurrentStepSchema = new Schema({

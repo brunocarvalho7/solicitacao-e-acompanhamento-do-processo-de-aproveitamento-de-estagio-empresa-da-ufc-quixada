@@ -12,6 +12,7 @@ const state = {
     course: '',
     email: '',
     id: '',
+    notifications: [],
   dark: false,
   drawer: {
     image: 0,
@@ -24,14 +25,13 @@ const state = {
     'rgba(244, 67, 54, .8), rgba(244, 67, 54, .8)',
   ],
   images: [],
-  notifications: [],
   rtl: false,
 }
 
 const mutations = {
     ...make.mutations(state),
     setProfileData: (state, profileData) => {
-        ['id', 'name', 'login', 'course', 'email'].forEach(function (attribute) {
+        ['id', 'name', 'login', 'course', 'email', 'notifications'].forEach(function (attribute) {
             const value = profileData[attribute];
 
             if (value) {
@@ -84,6 +84,24 @@ const actions = {
                 reject(new Error(errorMessage));
             })
             .finally(() => resolve())
+        });
+    },
+    setReadNotification: ({ commit }, notificationId) => {
+        return new Promise((resolve, reject) => {
+            axios.post('/readNotification/', {notificationId})
+            .then(res => {
+                if (res.data.success) {   
+                    commit('notifications', res.data.notifications);
+                    resolve(res.data.notifications.length);
+                } else {
+                    reject(new Error(res.data.message));
+                }
+            })
+            .catch(error => {
+                const errorMessage = error && error.response && error.response.data && error.response.data.message;
+
+                reject(new Error(errorMessage));
+            })
         });
     },
   fetch: ({ commit }) => {
