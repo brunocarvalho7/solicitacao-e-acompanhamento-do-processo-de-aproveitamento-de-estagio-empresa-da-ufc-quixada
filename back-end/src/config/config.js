@@ -6,6 +6,16 @@ require('dotenv').config({
 
 module.exports = {
     isProductionMode: env === 'prod',
+    oneSignal: {
+        appId: process.env.ONE_SIGNAL_APP_ID,
+        restApiKey: process.env.ONE_SIGNAL_REST_API_KEY,
+        baseApiUrl: process.env.ONE_SIGNAL_BASE_API_URL,
+        notificationApiUrl: process.env.ONE_SIGNAL_NOTIFICATION_API_URL,
+        notificationLaunchUrls: {
+            student: process.env.NOTIFICATION_LAUNCH_URLS_STUDENT,
+            coordinator: process.env.NOTIFICATION_LAUNCH_URLS_COORDINATOR,
+        },
+    },
     db: {
         username: process.env.DB_USERNAME,
         password: process.env.DB_PASSWORD,
