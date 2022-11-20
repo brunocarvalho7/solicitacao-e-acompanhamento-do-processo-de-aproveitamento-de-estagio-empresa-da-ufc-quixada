@@ -145,6 +145,7 @@ const state = {
         },
         type: null,
     },
+    processGoAndOpen: null,
     steppers: {
         showTceUploader: false,
         showTceEditor: false,
