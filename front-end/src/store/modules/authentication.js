@@ -6,12 +6,20 @@ import Roles from '@/router/roles';
 
 const state = {
     token: null,
-    roles: ['coordinator']
+    roles: null,
 };
 
 // "set" prefix, constant case. e.g: SET_FOO
 const mutations = {
     ...make.mutations(state),
+    roles: (state, roles) => {
+        state.roles = roles;
+        localStorage.setItem('roles', roles);
+
+        if (!roles) {
+            localStorage.removeItem('roles');
+        }
+    },
     token: (state, token) => {
         state.token = token;
         localStorage.setItem('token', token);
@@ -23,6 +31,18 @@ const mutations = {
             localStorage.removeItem('token');
         }
     },
+    initializeStore(state) {
+        const token = localStorage.getItem('token');
+        const roles = localStorage.getItem('roles');
+
+        if (token && !state.token) {
+            state.token = token;
+        }
+
+        if (roles && !state.roles) {
+            state.roles = token;
+        }
+    }
 }
 
 // "set" prefix, camel case. e.g: setFoo
@@ -50,6 +70,7 @@ const actions = {
 
     logout: ({commit}) => {
         commit('token', null);
+        commit('roles', null);
         router.replace('/login');
     },
     ...make.actions(state)
