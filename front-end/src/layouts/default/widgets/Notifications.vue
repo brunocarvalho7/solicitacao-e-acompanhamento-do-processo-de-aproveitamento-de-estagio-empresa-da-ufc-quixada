@@ -1,7 +1,7 @@
 <template>
-    <v-menu id="teste2" origin="top right" transition="scale-transition" :value="keepMenuOpen" :close-on-content-click="false" bottom :left="isLeft" :rigth="isRight" :offset-y="offsetY" :offset-x="offsetX">
+    <v-menu origin="top right" transition="scale-transition" :value="keepMenuOpen" :close-on-content-click="false" bottom :left="isLeft" :rigth="isRight" :offset-y="offsetY" :offset-x="offsetX">
         <template v-slot:activator="{ attrs, on }">
-            <v-btn id="teste" class="ml-2" min-width="0" text v-bind="attrs" v-on="on">
+            <v-btn id="menuActivator" class="ml-2" min-width="0" text v-bind="attrs" v-on="on">
                 <v-badge color="red" bordered overlap>
                     <template v-slot:badge>
                         <span>
@@ -95,7 +95,7 @@
                 dispatch('user/setReadNotification', notificationId)
                     .then((qtyNotifications) => {
                         if (qtyNotifications === 0) {
-                            document.getElementById("teste").click();
+                            document.getElementById("menuActivator").click();
                         }
                     })
                     .catch((e) => {
