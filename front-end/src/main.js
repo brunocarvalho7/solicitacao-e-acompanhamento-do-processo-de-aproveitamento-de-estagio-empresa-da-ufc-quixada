@@ -19,7 +19,7 @@ sync(store, router)
 
 const token = localStorage.getItem('token');
 
-axios.defaults.baseURL = 'http://localhost:3000/api/v1'
+axios.defaults.baseURL = process.env.VUE_APP_API_BASE_URL;
 axios.defaults.headers.common['Authorization'] = token;
 
 new Vue({
