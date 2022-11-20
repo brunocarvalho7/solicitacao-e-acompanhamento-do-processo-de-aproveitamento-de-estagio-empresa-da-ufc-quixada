@@ -41,9 +41,29 @@
                 'mini',
             ]),
             name: get('route/name'),
+            currentUserId: get('user/id'),
+        },
+        beforeCreate() {
+            this.$OneSignal.showSlidedownPrompt();
+        },
+        beforeMount() {
+            this.$OneSignal.init({
+                appId: process.env.VUE_APP_ONE_SIGNAL_APP_ID,
+                safari_web_id: process.env.VUE_APP_ONE_SIGNAL_SAFARI_WEB_ID,
+                notifyButton: {
+                    enable: true,
+                },
+                allowLocalhostAsSecureOrigin: true,
+            });
         },
         mounted() {
             dispatch('user/getUserProfile');
+
+            this.$OneSignal.on('subscriptionChange', (isSubscribed) => {
+                if (isSubscribed && this.currentUserId) {
+                    this.$OneSignal.setExternalUserId(this.currentUserId);
+                }
+            });
         },
   }
 </script>

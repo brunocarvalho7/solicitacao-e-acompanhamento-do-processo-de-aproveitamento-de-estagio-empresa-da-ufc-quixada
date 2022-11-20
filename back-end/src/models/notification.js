@@ -1,6 +1,7 @@
 /* eslint-disable max-len */
 const { Schema, Types, model } = require('mongoose');
 const Steps = require('../utils/steps.json');
+const OneSignal = require('../externals/oneSignal');
 
 const NotificationSchema = new Schema({
     message: { type: String, required: true },
@@ -40,6 +41,7 @@ NotificationSchema.statics.createNotifications = async function createNotificati
 
         Object.keys(notificationSettings).forEach((notificationRecipient) => {
             const recipient = process[notificationRecipient];
+            const launchUrl = OneSignal.configs.notificationLaunchUrls[notificationRecipient];
             const message = notificationSettings[notificationRecipient]
                 .replace('{tipoDocumento}', process.type === 'convencional' ? 'TCE' : 'contrato de trabalho');
 
@@ -47,9 +49,18 @@ NotificationSchema.statics.createNotifications = async function createNotificati
                 message,
                 recipient,
                 process,
+                launchUrl,
             });
         });
     });
+
+    try {
+        notifications.forEach(async ({ message, launchUrl, recipient }) => {
+            await OneSignal.sendNotification(message, launchUrl, recipient.toString());
+        });
+    } catch (e) {
+        console.log('It was not possible to send OneSignal notifications: ', e.message);
+    }
 
     return this.insertMany(notifications);
 };
