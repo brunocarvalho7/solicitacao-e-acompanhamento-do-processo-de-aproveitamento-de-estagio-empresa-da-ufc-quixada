@@ -77,7 +77,7 @@ tceSchema.methods.updateTce = async function updateTce(req) {
 
     tceData.estagiario.user = Types.ObjectId(req.userData.id);
     tceData.estagio.cargaHorariaSemanal = typeof tceData.estagio.cargaHorariaSemanal === 'string'
-        ? Number(tceData.estagio.cargaHorariaSemanal.replace(' h', '')) : null;
+        ? Number(tceData.estagio.cargaHorariaSemanal.replace(' h', '')) : tceData.estagio.cargaHorariaSemanal;
 
     tce.set(tceData);
 
