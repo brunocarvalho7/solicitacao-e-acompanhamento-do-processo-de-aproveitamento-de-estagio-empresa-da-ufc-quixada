@@ -1,67 +1,49 @@
 <template>
-  <v-app-bar
-    id="default-app-bar"
-    app
-    absolute
-    class="v-bar--underline"
-    color="transparent"
-    :clipped-left="$vuetify.rtl"
-    :clipped-right="!$vuetify.rtl"
-    height="70"
-    flat
-  >
-    <v-app-bar-nav-icon
-      class="hidden-md-and-up"
-      @click="drawer = !drawer"
-    />
+    <v-app-bar id="default-app-bar" class="v-bar--underline" color="transparent" height="70" 
+        :clipped-left="$vuetify.rtl" :clipped-right="!$vuetify.rtl" app absolute flat>
 
-    <default-drawer-toggle class="hidden-sm-and-down" />
+        <v-app-bar-nav-icon class="hidden-md-and-up" @click="drawer = !drawer" />
 
-    <v-toolbar-title
-      class="font-weight-light text-h5"
-      v-text="name"
-    />
+        <default-drawer-toggle class="hidden-sm-and-down" />
 
-    <v-spacer />
+        <v-toolbar-title class="font-weight-light text-h5" v-text="name" />
 
-    <!-- <default-search class="hidden-sm-and-down" /> -->
+        <v-spacer />
 
-    <!-- <default-go-home /> -->
+        <default-notifications />
 
-    <default-notifications />
-
-    <default-account />
-  </v-app-bar>
+        <default-account />
+    </v-app-bar>
 </template>
 
 <script>
-  // Utilities
-  import { get, sync } from 'vuex-pathify'
+    import { dispatch, get, sync } from 'vuex-pathify'
 
-  export default {
-    name: 'DefaultBar',
-
-    components: {
-      DefaultAccount: () => import(
-        /* webpackChunkName: "default-account" */
-        './widgets/Account'
-      ),
-      DefaultDrawerToggle: () => import(
-        /* webpackChunkName: "default-drawer-toggle" */
-        './widgets/DrawerToggle'
-      ),
-      DefaultNotifications: () => import(
-        /* webpackChunkName: "default-notifications" */
-        './widgets/Notifications'
-      )
-    },
-
-    computed: {
-      ...sync('app', [
-        'drawer',
-        'mini',
-      ]),
-      name: get('route/name'),
-    },
+    export default {
+        name: 'DefaultBar',
+        components: {
+            DefaultAccount: () => import(
+                /* webpackChunkName: "default-account" */
+                './widgets/Account'
+            ),
+            DefaultDrawerToggle: () => import(
+                /* webpackChunkName: "default-drawer-toggle" */
+                './widgets/DrawerToggle'
+            ),
+            DefaultNotifications: () => import(
+                /* webpackChunkName: "default-notifications" */
+                './widgets/Notifications'
+            )
+        },
+        computed: {
+            ...sync('app', [
+                'drawer',
+                'mini',
+            ]),
+            name: get('route/name'),
+        },
+        mounted() {
+            dispatch('user/getUserProfile');
+        },
   }
 </script>

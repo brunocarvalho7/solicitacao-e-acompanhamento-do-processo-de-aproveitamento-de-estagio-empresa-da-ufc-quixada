@@ -17,7 +17,7 @@ Vue.config.productionTip = false
 //store.state.route.query  // current query (object)
 sync(store, router)
 
-const token = localStorage.getItem('token')
+const token = localStorage.getItem('token');
 
 axios.defaults.baseURL = 'http://localhost:3000/api/v1'
 axios.defaults.headers.common['Authorization'] = token;
@@ -26,5 +26,8 @@ new Vue({
   router,
   vuetify,
   store,
-  render: h => h(App)
+  render: h => h(App),
+  beforeCreate() {
+		this.$store.commit('authentication/initializeStore');
+	}
 }).$mount('#app')

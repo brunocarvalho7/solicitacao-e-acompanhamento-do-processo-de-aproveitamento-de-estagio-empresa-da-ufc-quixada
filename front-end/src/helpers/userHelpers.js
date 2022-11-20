@@ -1,7 +1,19 @@
 import store from '@/store';
 
+function getUserRoles() {
+    let userRoles = store.getters['authentication/roles'];
+
+    if (!userRoles || !userRoles.length) {
+        if (localStorage.getItem('roles')) {
+            userRoles = localStorage.getItem('roles');
+        }
+    }
+
+    return userRoles;
+}
+
 function isAccessAuthorized (routeRoles) {
-    const userRoles = store.getters['authentication/roles'];
+    const userRoles = getUserRoles();
 
     if (!routeRoles || !routeRoles.length) {
         return true;
@@ -13,12 +25,13 @@ function isAccessAuthorized (routeRoles) {
 }
 
 function isUserRoleSet() {
-    const userRoles = store.getters['authentication/roles'].length;
+    const userRoles = getUserRoles();
 
-    return !!userRoles;
+    return userRoles && userRoles.length > 0;
 }
 
 export { 
     isAccessAuthorized,
     isUserRoleSet,
+    getUserRoles,
 };
