@@ -140,7 +140,6 @@ async function convertTceToPdf(tceHtml) {
     });
 
     const tcePdfBuffer = await page.pdf({
-        path: path.resolve(__dirname, 'output4.pdf'),
         printBackground: true,
         format: 'A4',
         displayHeaderFooter: true,
@@ -163,7 +162,6 @@ async function generateTceAsPDF(tce) {
 
     return convertTceToPdf(tceHtml);
 }
-
 
 module.exports = {
     generateTceAsPDF,
