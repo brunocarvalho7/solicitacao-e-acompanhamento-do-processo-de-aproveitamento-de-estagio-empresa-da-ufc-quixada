@@ -19,6 +19,10 @@ Trabalho de Conclusão de Curso
   - **[jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)**
   - **[mongoose](https://www.npmjs.com/package/mongoose)**
   - **[ssl-root-cas](https://www.npmjs.com/package/ssl-root-cas)**
+- **Heroku Buildpacks Required:**
+  - [https://github.com/timanovsky/subdir-heroku-buildpack.git](https://github.com/timanovsky/subdir-heroku-buildpack.git)
+  - [https://github.com/jontewks/puppeteer-heroku-buildpack#22.0.0-no-xdg-utils](https://github.com/jontewks/puppeteer-heroku-buildpack#22.0.0-no-xdg-utils)
+  - heroku/nodejs
 
 ### Front-end
 - **[Vue.js](https://vuejs.org/)**

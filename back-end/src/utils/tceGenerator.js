@@ -131,7 +131,9 @@ async function convertTceToHtml(docxBuffer) {
 
 async function convertTceToPdf(tceHtml) {
     const headerContent = fs.readFileSync(TCE_HEADER_PATH).toString();
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
     const page = await browser.newPage();
 
     await page.setContent(tceHtml);
