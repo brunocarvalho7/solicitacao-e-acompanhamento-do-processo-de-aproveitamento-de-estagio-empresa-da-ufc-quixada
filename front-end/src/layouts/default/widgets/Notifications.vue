@@ -107,13 +107,13 @@
 
                 if (userRoles && userRoles[0] === 'student') {
                     if (this.$router.currentRoute.name !== 'Processo') {
-                        this.$router.push({ path: '/components/process' });
+                        this.$router.push({ path: '/process' });
                     }
                 } else {
                     this.$store.set('process/processGoAndOpen', process);
     
                     if (this.$router.currentRoute.name !== 'Processos') {
-                        this.$router.push({ path: '/components/processes' });
+                        this.$router.push({ path: '/processes' });
                     }
                 }
             }

@@ -11,7 +11,7 @@
             <template #subtitle>
                 <p class="mt-0 text-justify text-caption">
                     A unidade concedente deve necessariamente ter convênio ativo com a agência de estágios da UFC. <br/>
-                    Clique <router-link to="/components/partners">aqui</router-link> para verificar a situação do convênio da empresa com a UFC.
+                    Clique <router-link to="/partners">aqui</router-link> para verificar a situação do convênio da empresa com a UFC.
                 </p>
             </template>
 

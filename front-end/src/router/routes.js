@@ -29,17 +29,17 @@ export default [
                 component: HelloWorldPage,
             },
             {
-                path: 'components/profile',
+                path: '/profile',
                 name: 'Perfil',
                 component: UserProfileView
             },
             {
-                path: 'components/partners',
+                path: '/partners',
                 name: 'Convênios',
                 component: PartnersView
             },
             {
-                path: 'components/process',
+                path: '/process',
                 name: 'Processo',
                 component: ProcessView,
                 meta: {
@@ -49,7 +49,7 @@ export default [
                 }
             },
             {
-                path: 'components/processes',
+                path: '/processes',
                 name: 'Processos',
                 component: ProcessManagementView,
                 meta: {
@@ -59,7 +59,7 @@ export default [
                 }
             },
             {
-                path: 'components/coordinators',
+                path: '/coordinators',
                 name: 'Cordenadores',
                 component: CoordinatorsView,
                 meta: {
