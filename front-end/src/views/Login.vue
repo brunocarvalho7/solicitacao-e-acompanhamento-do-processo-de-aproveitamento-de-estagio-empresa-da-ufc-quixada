@@ -28,16 +28,19 @@
                                             <h1 class="flex my-4 headline font-weight-bold">Acesso ao Sistema</h1>
                                             <span class="body-1 red--text">{{error}}</span>
                                         </div>
+
                                         <v-text-field append-icon="person" name="login" label="Login" type="text" v-model="login"></v-text-field>
                                         <v-text-field append-icon="lock" name="password" label="Senha" id="password" type="password" v-model="password"></v-text-field>
+
                                         <p>
                                             Utilize as mesmas credenciais cadastradas na <a href="https://identidadepessoa.quixada.ufc.br/" target="_blank">Base Centralizada.</a>
                                         </p>
 
+                                        <div class="text-xs-center">
+                                            <v-btn color="secondary" type="submit" :loading="loading" large>Entrar</v-btn>
+                                        </div>
                                     </v-card-text>
-                                    <div class="text-xs-center">
-                                        <v-btn color="secondary" type="submit" :loading="loading" large>Entrar</v-btn>
-                                    </div>
+                                    
                                 </v-form>
                             </v-flex>
                             <v-flex lg12 align-self-end>
@@ -73,13 +76,14 @@
                 this.loading = true;
                 dispatch('authentication/login', { login: this.login, password: this.password })
                     .then(() => {
+                        this.loading = false;
                         if (get('authentication/isAuthenticated')) {
                             this.$router.push('/')
                         }
                     }).catch((e) => {
                         this.error = e.message;
+                        this.loading = false;
                     });
-                this.loading = false;
             }
         }
     };
