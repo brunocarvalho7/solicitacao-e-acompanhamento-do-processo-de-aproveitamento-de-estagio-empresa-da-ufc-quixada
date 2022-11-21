@@ -1,9 +1,9 @@
 const express = require('express');
 const path = require('path');
-const cors = require('cors');
 const morgan = require('morgan');
 const mongooseConnection = require('./config/mongooseConnection');
 const bootstrapSuperAdminUser = require('./config/bootstrapSuperAdminUser');
+const corsConfiguration = require('./config/cors');
 
 const app = express();
 
@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.json({ type: 'application/vnd.api+json' }));
 app.use(morgan('dev'));
-app.use(cors());
+app.use(corsConfiguration);
 
 app.set('mongoose connection', mongooseConnection);
 app.set('set up super admin', bootstrapSuperAdminUser());
