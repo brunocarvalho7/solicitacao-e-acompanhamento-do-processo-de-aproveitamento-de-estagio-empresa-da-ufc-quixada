@@ -39,7 +39,7 @@
         data: () => ({
             items: [
                 { title: 'Inicio', to: '/' },
-                { title: 'Perfil', to: '/components/profile' },
+                { title: 'Perfil', to: '/profile' },
                 { divider: true },
                 { title: 'Sair', to: '/logout' },
             ]

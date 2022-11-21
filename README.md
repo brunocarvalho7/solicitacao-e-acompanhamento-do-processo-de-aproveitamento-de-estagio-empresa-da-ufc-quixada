@@ -26,4 +26,3 @@ Trabalho de Conclusão de Curso
 - **[Vue Router](https://v3.router.vuejs.org/)**
 - **Bibliotecas utilizadas:**
   - **[axios](https://www.npmjs.com/package/axios)**
-  - **[vue-jwt-decode](https://www.npmjs.com/package/vue-jwt-decode)**

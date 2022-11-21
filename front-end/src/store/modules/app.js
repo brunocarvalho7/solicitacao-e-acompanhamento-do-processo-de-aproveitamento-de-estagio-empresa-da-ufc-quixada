@@ -4,8 +4,6 @@ import Roles from '@/router/roles';
 
 const state = {
     drawer: null,
-    drawerImage: true,
-    version: "1.0.0",
     mini: false,
     items: [
         {
@@ -16,29 +14,29 @@ const state = {
         {
             title: 'Perfil',
             icon: 'mdi-account',
-            to: '/components/profile/',
+            to: '/profile',
         },
         {
             title: 'Convênios',
             icon: 'mdi-clipboard-outline',
-            to: '/components/partners',
+            to: '/partners',
         },
         {
             title: 'Coordenadores',
             icon: 'mdi-account-group-outline',
-            to: '/components/coordinators',
+            to: '/coordinators',
             roles: [Roles.SUPER_ADMIN]
         },
         {
             title: 'Processo',
             icon: 'mdi-view-dashboard',
-            to: '/components/process',
+            to: '/process',
             roles: [Roles.STUDENT]
         },
         {
             title: 'Processos',
             icon: 'mdi-view-dashboard',
-            to: '/components/processes',
+            to: '/processes',
             roles: [Roles.COORDINATOR]
         },
     ]
