@@ -6,6 +6,7 @@ require('dotenv').config({
 
 module.exports = {
     isProductionMode: env === 'prod',
+    defaultCoordinatorPassword: process.env.DEFAULT_COORDINATOR_PASSWORD,
     oneSignal: {
         appId: process.env.ONE_SIGNAL_APP_ID,
         restApiKey: process.env.ONE_SIGNAL_REST_API_KEY,

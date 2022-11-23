@@ -1,6 +1,7 @@
 const User = require('../models/user');
 const Roles = require('../utils/roles.json');
 const permissionUtils = require('../utils/permissionUtils');
+const config = require('../config/config');
 
 // eslint-disable-next-line no-unused-vars
 function generatePassword() {
@@ -29,7 +30,7 @@ exports.registerNewCoordinator = async function registerNewCoordinator(req, res)
 
         // eslint-disable-next-line object-curly-newline
         const { name, login, email, course } = req.body;
-        const password = 'qwerty1!';
+        const password = config.defaultCoordinatorPassword;
         const roles = [Roles.COORDINATOR];
 
         const newCoordinator = new User({
