@@ -53,6 +53,12 @@
         <v-stepper-content step="6">
             <internship-workshop/>
         </v-stepper-content>
+
+        <div>
+            <v-divider class="mt-2 mx-4" />
+
+            <process-messages :messages="process.messages" :processId="process.id" :showNewMessage="true" mutation="updateSingleProcessMessages" />
+        </div>
     </v-stepper>
 </template>
 
@@ -88,6 +94,7 @@
         )
     },
     computed: {
+        process: get('process/process'),
         currentProcessStep: get('process/process@steps.currentStep.position')
     },
     mounted() {

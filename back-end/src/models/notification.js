@@ -66,6 +66,25 @@ NotificationSchema.statics.createNotifications = async function createNotificati
     return this.insertMany(notifications);
 };
 
+NotificationSchema.statics.createNotificationsForNewMessages = async function createNotifications(process, message) {
+    const notificationRecipient = message.author.toString() !== process.student.toString() ? 'student' : 'coordinator';
+    const recipient = process[notificationRecipient];
+    const launchUrl = OneSignal.configs.notificationLaunchUrls[notificationRecipient].replace(':processId', process._id);
+    const notificationMessage = 'Nova mensagem recebida no processo de estágio. Clique aqui para ler.';
+
+    try {
+        await OneSignal.sendNotification(notificationMessage, launchUrl, recipient.toString());
+    } catch (e) {
+        console.log('It was not possible to send OneSignal notifications: ', e.message);
+    }
+
+    return this.create({
+        message: notificationMessage,
+        recipient,
+        process,
+    });
+};
+
 const Notification = model('Notification', NotificationSchema);
 
 module.exports = Notification;

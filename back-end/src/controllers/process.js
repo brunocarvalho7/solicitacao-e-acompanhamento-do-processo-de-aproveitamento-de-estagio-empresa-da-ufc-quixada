@@ -129,7 +129,8 @@ exports.getAllProcesses = async (req, res) => {
         const { id } = req.userData;
         const processes = await Process
             .find({ coordinator: Types.ObjectId(id) })
-            .populate('student', 'name course');
+            .populate('student', 'name course')
+            .populate('messages.author', 'name');
 
         res.json({
             success: true,
@@ -213,6 +214,52 @@ exports.approveDocumentation = async (req, res) => {
         const result = await process.approveDocumentation();
 
         return res.json(result);
+    } catch (error) {
+        return res.status(400).json({
+            message: error.message,
+        });
+    }
+};
+
+exports.postNewMessage = async (req, res) => {
+    try {
+        const { message } = req.body;
+        const { processId } = req.params;
+
+        const process = await Process.findById(processId);
+
+        if (!process) {
+            return res.status(404).json({
+                success: false,
+                message: 'Não foi possível localizar o processo informado.',
+            });
+        }
+
+        if (!process.isResourceOwner(req)) {
+            return res.status(403).json({
+                success: false,
+                message: 'Usuário não possui permissão para modificar o processo informado.',
+            });
+        }
+
+        const result = await process.postNewMessage(req, message);
+
+        return res.json(result);
+    } catch (error) {
+        return res.status(400).json({
+            message: error.message,
+        });
+    }
+};
+
+exports.getAllUnreadCoordinatorMessages = async (req, res) => {
+    try {
+        const processes = await Process.getAllUnreadCoordinatorMessages(req.userData.id);
+
+        return res.json({
+            success: true,
+            processes,
+        });
     } catch (error) {
         return res.status(400).json({
             message: error.message,

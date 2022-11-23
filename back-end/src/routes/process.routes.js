@@ -29,9 +29,11 @@ const router = express.Router();
 
 router.get('/', userLoggedIn.validateLoggedIn, userLoggedIn.isStudent, processController.getProcess);
 router.get('/all', userLoggedIn.validateLoggedIn, userLoggedIn.isCoordinator, processController.getAllProcesses);
+router.get('/messages', userLoggedIn.validateLoggedIn, userLoggedIn.isCoordinator, processController.getAllUnreadCoordinatorMessages);
 router.post('/sigaaRegistration/confirm', userLoggedIn.validateLoggedIn, processController.confirmSigaaRegistration);
 router.post('/internshipType', userLoggedIn.validateLoggedIn, processController.setInternshipType);
 router.post('/documentation', userLoggedIn.validateLoggedIn, upload.single('documentFile'), processController.uploadDocumentation);
+router.post('/:processId/message', userLoggedIn.validateLoggedIn, processController.postNewMessage);
 router.post('/:processId/documentation/approve', userLoggedIn.validateLoggedIn, userLoggedIn.isCoordinator, processController.approveDocumentation);
 router.get('/documentation/tce', userLoggedIn.validateLoggedIn, processController.getTce);
 router.get('/documentation/tce/download', userLoggedIn.validateLoggedIn, processController.generateTce);
