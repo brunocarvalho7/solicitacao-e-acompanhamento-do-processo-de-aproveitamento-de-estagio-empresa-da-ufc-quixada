@@ -67,12 +67,35 @@ const StepsSchema = new Schema({
     _id: false,
 });
 
+const MessageSchema = new Schema({
+    author: { type: Schema.Types.ObjectId, ref: 'User' },
+    isReplied: { type: Boolean, default: false },
+    message: { type: String, default: '' },
+    _id: false,
+}, {
+    timestamps: true,
+});
+
+MessageSchema.pre('save', async function save(next) {
+    const self = this;
+    const process = self.parent();
+
+    if (!self.$isNew) {
+        return next();
+    }
+
+    await Notification.createNotificationsForNewMessages(process, self);
+
+    return next();
+});
+
 const ProcessSchema = new Schema({
     student: { type: Schema.Types.ObjectId, ref: 'User' },
     coordinator: { type: Schema.Types.ObjectId, ref: 'User' },
     tce: { type: Schema.Types.ObjectId, ref: 'TCE' },
     type: { type: String, default: null },
     steps: { type: StepsSchema, default: {} },
+    messages: { type: [MessageSchema], default: () => ([]) },
 }, {
     timestamps: true,
 });
@@ -210,6 +233,34 @@ ProcessSchema.methods.isResourceOwner = function isResourceOwner(req) {
     return currentUserId.equals(this.student) || currentUserId.equals(this.coordinator);
 };
 
+ProcessSchema.methods.postNewMessage = async function post(req, message) {
+    const self = this;
+    const currentUserId = Types.ObjectId(req.userData.id);
+
+    // Sets to replied all previous messages whose author is not the user who is posting this message
+    self.messages.forEach((messageObj) => {
+        if (messageObj.author.toString() !== currentUserId.toString()) {
+            // eslint-disable-next-line no-param-reassign
+            messageObj.isReplied = true;
+        }
+    });
+
+    self.messages.push({
+        author: currentUserId,
+        message,
+    });
+
+    await self.save();
+
+    const populatedSchema = await self.populate('messages.author', 'name');
+    const pojoSchema = await populatedSchema.getPojoSchema();
+
+    return {
+        success: true,
+        process: pojoSchema,
+    };
+};
+
 ProcessSchema.statics.createProcessForCurrentUser = async function createProcess(req) {
     const Process = this;
     const { course } = req.userData;
@@ -226,7 +277,8 @@ ProcessSchema.statics.createProcessForCurrentUser = async function createProcess
 ProcessSchema.statics.getProcessFromCurrentUser = async function get(req, returnMongoDocument) {
     const { id } = req.userData;
     const process = await this
-        .findOne({ student: Types.ObjectId(id) });
+        .findOne({ student: Types.ObjectId(id) })
+        .populate('messages.author', 'name');
 
     if (!process) {
         return null;
@@ -237,6 +289,23 @@ ProcessSchema.statics.getProcessFromCurrentUser = async function get(req, return
     }
 
     return process.getPojoSchema();
+};
+
+ProcessSchema.statics.getAllUnreadCoordinatorMessages = async function get(userId) {
+    const coordinator = Types.ObjectId(userId);
+
+    return this
+        .find({
+            'messages.isReplied': false,
+            coordinator,
+        })
+        .sort({
+            updatedAt: -1,
+        })
+        .select({ _id: 1, student: 1, messages: 1 })
+        .populate('student', 'name course')
+        .populate('messages.author', 'name')
+        .lean();
 };
 
 const Process = model('Process', ProcessSchema);

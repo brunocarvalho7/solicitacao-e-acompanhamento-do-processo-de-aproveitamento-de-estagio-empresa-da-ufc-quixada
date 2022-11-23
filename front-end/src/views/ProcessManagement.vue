@@ -108,6 +108,12 @@
                             </internship-step-overview>
                         </v-stepper-content>
                     </div>
+
+                    <div>
+                        <v-divider class="mt-2 mx-4" />
+
+                        <process-messages :messages="process.messages" :processId="process._id" :showNewMessage="true" mutation="updateProcessMessages" @doProcessUpdateAfterSendingNewMessage="updateOpenedProcess" />
+                    </div>
                 </v-stepper>
 
                 <v-card-actions>
@@ -187,7 +193,6 @@
 
                     if (this.processGoAndOpen) {
                         const openProcessObj = this.processes.find((process) => process._id === this.processGoAndOpen);
-
                         this.processGoAndOpen = null;
 
                         if (openProcessObj) {
@@ -250,6 +255,9 @@
                         this.snackbarMessage = e.message;
                         this.isSnackbarVisible = true;
                     });
+            },
+            updateOpenedProcess: function ({ messages }) {
+                this.process = Object.assign({}, this.process, { messages });
             }
         },
     }

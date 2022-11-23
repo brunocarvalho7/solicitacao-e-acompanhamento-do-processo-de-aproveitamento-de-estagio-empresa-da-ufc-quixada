@@ -146,6 +146,7 @@ const state = {
         type: null,
     },
     processGoAndOpen: null,
+    processesWithMessages: [],
     steppers: {
         showTceUploader: false,
         showTceEditor: false,
@@ -173,6 +174,22 @@ const mutations = {
         let index = state.all.findIndex(c => c._id === process._id);
 
         Object.assign(state.all[index], process);
+    },
+
+    updateSingleProcessMessages: function (state, { messages}) {
+        this._vm.$set(state.process, 'messages', messages);
+    },
+
+    updateProcessMessages: function (state, { id, messages}) {
+        let index = state.all.findIndex(c => c._id === id);
+
+        this._vm.$set(state.all, index, Object.assign({}, state.all[index], { messages }));
+    },
+
+    updateProcessesWithMessages:  function (state, { id, messages }) {
+        let index = state.processesWithMessages.findIndex(c => c._id === id);
+
+        this._vm.$set(state.processesWithMessages, index, Object.assign({}, state.processesWithMessages[index], { messages }));
     },
 };
 
@@ -340,6 +357,41 @@ const actions = {
                 reject(new Error(errorMessage));
             })
             .finally(() => resolve())
+        });
+    },
+    getUnreadCoordinatorMessages: ({commit}) => {
+        return new Promise((resolve, reject) => {
+            axios.get('/process/messages')
+            .then(res => {
+                if (res.data.success) {
+                    commit('processesWithMessages', res.data.processes);
+                }
+            })
+            .catch(error => {
+                const errorMessage = error && error.response && error.response.data && error.response.data.message;
+
+                reject(new Error(errorMessage));
+            })
+            .finally(() => resolve())
+        });
+    },
+    sendNewMessage: ({commit}, { processId, message, mutationTarget }) => {
+        return new Promise((resolve, reject) => {
+            axios.post(`/process/${processId}/message`, { message })
+            .then(res => {
+                if (res.data.success) {
+                    const mutation = mutationTarget || 'updateProcessMessages';
+
+                    commit(mutation, res.data.process);
+
+                    resolve(res.data.process);
+                }
+            })
+            .catch(error => {
+                const errorMessage = error && error.response && error.response.data && error.response.data.message;
+
+                reject(new Error(errorMessage));
+            })
         });
     },
 };
