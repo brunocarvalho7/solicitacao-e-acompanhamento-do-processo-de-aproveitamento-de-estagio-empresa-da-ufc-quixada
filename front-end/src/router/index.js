@@ -3,6 +3,7 @@ import VueRouter from 'vue-router';
 import NProgress from 'nprogress';
 import routes from './routes';
 import { isAccessAuthorized, isUserRoleSet } from '@/helpers/userHelpers';
+import store from '@/store';
 import 'nprogress/nprogress.css';
 
 Vue.use(VueRouter);
@@ -15,6 +16,14 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
+    if (to.name === 'goStraighToProcess') {
+        if (to.params.processId) {
+            store.set('process/processGoAndOpen', to.params.processId);
+            next('/processes');
+            return;
+        }
+    }
+
     if (to.matched.some((record) => record.meta.requiresAuth)) {
         const token = localStorage.getItem('token');
 

@@ -72,6 +72,13 @@ export default [
         ]
     },
     {
+        path: '/openProcess/:processId',
+        name: 'goStraighToProcess',
+        meta: {
+            public: true
+        },
+    },
+    {
         path: '*',
         meta: {
             public: true

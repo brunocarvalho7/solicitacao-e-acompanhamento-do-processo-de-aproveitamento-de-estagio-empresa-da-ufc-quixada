@@ -1,5 +1,5 @@
 <template>
-    <v-menu origin="top right" transition="scale-transition" :value="keepMenuOpen" :close-on-content-click="false" bottom :left="isLeft" :rigth="isRight" :offset-y="offsetY" :offset-x="offsetX">
+    <v-menu origin="top right" transition="scale-transition" :close-on-content-click="false" bottom left offset-y>
         <template v-slot:activator="{ attrs, on }">
             <v-btn id="menuActivator" class="ml-2" min-width="0" text v-bind="attrs" v-on="on">
                 <v-badge color="red" bordered overlap>
@@ -79,15 +79,6 @@
         computed: {
             notifications: get('user/notifications'),
         },
-        data () {
-            return {
-                keepMenuOpen: false,
-                offsetY: true,
-                offsetX: false,
-                isLeft: true,
-                isRight: false,
-            }
-        },
         methods: {
             setReadNotification(notification) {
                 const notificationId = notification && notification._id;
@@ -109,11 +100,9 @@
                     if (this.$router.currentRoute.name !== 'Processo') {
                         this.$router.push({ path: '/process' });
                     }
-                } else {
-                    this.$store.set('process/processGoAndOpen', process);
-    
+                } else {    
                     if (this.$router.currentRoute.name !== 'Processos') {
-                        this.$router.push({ path: '/processes' });
+                        this.$router.push({ path: `/openProcess/${process}` })
                     }
                 }
             }

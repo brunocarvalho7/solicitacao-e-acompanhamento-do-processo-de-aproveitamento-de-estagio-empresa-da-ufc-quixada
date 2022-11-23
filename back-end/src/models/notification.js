@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable max-len */
 const { Schema, Types, model } = require('mongoose');
 const Steps = require('../utils/steps.json');
@@ -41,7 +42,7 @@ NotificationSchema.statics.createNotifications = async function createNotificati
 
         Object.keys(notificationSettings).forEach((notificationRecipient) => {
             const recipient = process[notificationRecipient];
-            const launchUrl = OneSignal.configs.notificationLaunchUrls[notificationRecipient];
+            const launchUrl = OneSignal.configs.notificationLaunchUrls[notificationRecipient].replace(':processId', process._id);
             const message = notificationSettings[notificationRecipient]
                 .replace('{tipoDocumento}', process.type === 'convencional' ? 'TCE' : 'contrato de trabalho');
 

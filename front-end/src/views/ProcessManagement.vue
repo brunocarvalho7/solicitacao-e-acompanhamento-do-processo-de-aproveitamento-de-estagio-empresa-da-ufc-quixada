@@ -134,7 +134,7 @@
 </template>
   
 <script>
-    import { get, dispatch } from 'vuex-pathify';
+    import { get, sync, dispatch } from 'vuex-pathify';
 
     export default {
         name: 'ProcessManagementView',
@@ -166,7 +166,7 @@
         },
         computed: {
             processes: get('process/all'),
-            processGoAndOpen: get('process/processGoAndOpen'),
+            processGoAndOpen: sync('process/processGoAndOpen'),
             selectedProcessCurrentStep() {
                 return this.process && this.process.steps && this.process.steps.currentStep.position - 1;
             },
@@ -187,7 +187,12 @@
 
                     if (this.processGoAndOpen) {
                         const openProcessObj = this.processes.find((process) => process._id === this.processGoAndOpen);
-                        this.openProcess(openProcessObj)
+
+                        this.processGoAndOpen = null;
+
+                        if (openProcessObj) {
+                            this.openProcess(openProcessObj);
+                        }
                     }
                 })
                 .catch(() => {
