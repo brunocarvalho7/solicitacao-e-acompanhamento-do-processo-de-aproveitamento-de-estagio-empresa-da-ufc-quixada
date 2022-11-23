@@ -146,6 +146,7 @@ const state = {
         type: null,
     },
     processGoAndOpen: null,
+    processesReadyToReview: [],
     processesWithMessages: [],
     steppers: {
         showTceUploader: false,
@@ -349,6 +350,22 @@ const actions = {
                     commit('updateProcess', res.data.process);
                 } else {
                     reject(new Error(res.data.message));
+                }
+            })
+            .catch(error => {
+                const errorMessage = error && error.response && error.response.data && error.response.data.message;
+
+                reject(new Error(errorMessage));
+            })
+            .finally(() => resolve())
+        });
+    },
+    getProcessesReadyToReview: ({commit}) => {
+        return new Promise((resolve, reject) => {
+            axios.get('/process/search', { params: { isReadyToReview: true } })
+            .then(res => {
+                if (res.data.success) {
+                    commit('processesReadyToReview', res.data.processes);
                 }
             })
             .catch(error => {

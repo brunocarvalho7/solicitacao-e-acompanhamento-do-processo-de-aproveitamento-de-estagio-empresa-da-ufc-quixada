@@ -44,6 +44,7 @@ const CurrentStepSchema = new Schema({
     step: { type: String, default: 'sigaaRegistration' },
     position: { type: Number, default: 1 },
     description: { type: String, default: '' },
+    isReadyToReview: { type: Boolean, default: false },
     _id: false,
 });
 
@@ -171,6 +172,8 @@ ProcessSchema.methods.setDocumentPath = async function setDocumentPath(fileUploa
         };
     }
 
+    this.steps.currentStep.isReadyToReview = true;
+
     currentStep.isSubmitted = true;
     currentStep.documentSubmittedDate = new Date();
     currentStep.documentPath = `uploads/documentation/${fileUploadedInfo.filename}`;
@@ -211,6 +214,7 @@ ProcessSchema.methods.approveDocumentation = async function approveDocumentation
         this.steps.currentStep = Steps[nextStep];
 
         if (Steps[nextStep].step === Steps.WORKSHOP.step) {
+            this.steps.currentStep.isReadyToReview = true;
             this.steps.workshop.isSubmitted = true;
             this.steps.workshop.documentSubmittedDate = new Date();
             this.steps.workshop.documentPath = '';

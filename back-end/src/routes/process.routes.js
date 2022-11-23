@@ -29,6 +29,7 @@ const router = express.Router();
 
 router.get('/', userLoggedIn.validateLoggedIn, userLoggedIn.isStudent, processController.getProcess);
 router.get('/all', userLoggedIn.validateLoggedIn, userLoggedIn.isCoordinator, processController.getAllProcesses);
+router.get('/search', userLoggedIn.validateLoggedIn, userLoggedIn.isCoordinator, processController.search);
 router.get('/messages', userLoggedIn.validateLoggedIn, userLoggedIn.isCoordinator, processController.getAllUnreadCoordinatorMessages);
 router.post('/sigaaRegistration/confirm', userLoggedIn.validateLoggedIn, processController.confirmSigaaRegistration);
 router.post('/internshipType', userLoggedIn.validateLoggedIn, processController.setInternshipType);
