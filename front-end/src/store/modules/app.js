@@ -7,7 +7,7 @@ const state = {
     mini: false,
     items: [
         {
-            title: 'Dashboard',
+            title: 'Inicio',
             icon: 'mdi-view-dashboard',
             to: '/',
         },
@@ -29,13 +29,13 @@ const state = {
         },
         {
             title: 'Processo',
-            icon: 'mdi-view-dashboard',
+            icon: 'mdi-clipboard-list',
             to: '/process',
             roles: [Roles.STUDENT]
         },
         {
             title: 'Processos',
-            icon: 'mdi-view-dashboard',
+            icon: 'mdi-clipboard-list',
             to: '/processes',
             roles: [Roles.COORDINATOR]
         },

@@ -221,6 +221,36 @@ exports.approveDocumentation = async (req, res) => {
     }
 };
 
+exports.search = async (req, res) => {
+    try {
+        const { currentStep, isReadyToReview } = req.query;
+        const filterOptions = {
+            coordinator: Types.ObjectId(req.userData.id),
+        };
+
+        if (isReadyToReview) {
+            filterOptions['steps.currentStep.isReadyToReview'] = isReadyToReview === 'true';
+        }
+
+        if (currentStep) {
+            filterOptions['steps.currentStep.step'] = currentStep;
+        }
+
+        const processes = await Process
+            .find(filterOptions)
+            .populate('student', 'name course');
+
+        return res.json({
+            success: true,
+            processes,
+        });
+    } catch (error) {
+        return res.status(400).json({
+            message: error.message,
+        });
+    }
+};
+
 exports.postNewMessage = async (req, res) => {
     try {
         const { message } = req.body;

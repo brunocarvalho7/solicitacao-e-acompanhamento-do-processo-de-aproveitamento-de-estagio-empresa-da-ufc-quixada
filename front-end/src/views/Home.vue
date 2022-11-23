@@ -1,5 +1,6 @@
 <template>
     <student-onboarding v-if="isStudent" />
+    <coordinator-onboarding v-else />
 </template>
 
 <script>
@@ -12,6 +13,10 @@
                 /* webpackChunkName: "student-onboarding" */
                 '@/components/StudentOnboarding'
             ),
+            CoordinatorOnboarding: () => import(
+                /* webpackChunkName: "coordinator-onboarding" */
+                '@/components/CoordinatorOnboarding'
+            )
         },
         data () {
             return {
