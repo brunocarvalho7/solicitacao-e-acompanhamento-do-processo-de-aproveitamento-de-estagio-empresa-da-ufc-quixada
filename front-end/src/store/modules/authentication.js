@@ -40,7 +40,7 @@ const mutations = {
         }
 
         if (roles && !state.roles) {
-            state.roles = token;
+            state.roles = roles;
         }
     }
 }

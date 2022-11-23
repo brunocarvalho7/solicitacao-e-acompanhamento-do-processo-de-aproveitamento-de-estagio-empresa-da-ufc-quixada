@@ -3,9 +3,13 @@ import store from '@/store';
 function getUserRoles() {
     let userRoles = store.getters['authentication/roles'];
 
+    if (!Array.isArray(userRoles)) {
+        userRoles = [userRoles];
+    }
+
     if (!userRoles || !userRoles.length) {
         if (localStorage.getItem('roles')) {
-            userRoles = localStorage.getItem('roles');
+            userRoles = [localStorage.getItem('roles')];
         }
     }
 
