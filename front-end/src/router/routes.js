@@ -1,4 +1,4 @@
-import HelloWorldPage from '@/components/HelloWorld';
+import HomePage from '@/views/Home';
 import LoginView from '@/views/Login';
 import UserProfileView from '@/views/UserProfile';
 import PartnersView from '@/views/Partners';
@@ -14,6 +14,7 @@ import DefaultLayout from '@/layouts/default/Index';
 import { dispatch } from 'vuex-pathify';
 
 import Roles from './roles';
+// import store from '@/store';
 
 export default [
     {
@@ -25,8 +26,8 @@ export default [
         children: [
             {
                 path: '',
-                name: 'Dashboard',
-                component: HelloWorldPage,
+                name: 'Inicio',
+                component: HomePage,
             },
             {
                 path: '/profile',
@@ -118,13 +119,4 @@ export default [
             dispatch('authentication/logout');
         }
     },
-    {
-        path: '/',
-        meta: {
-            public: true
-        },
-        name: "HelloWorld",
-        component: HelloWorldPage
-    }
-
 ]
